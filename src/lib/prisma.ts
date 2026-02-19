@@ -11,6 +11,7 @@ function parseDatabaseUrl(url: string) {
     user: parsed.username,
     password: parsed.password,
     database: parsed.pathname.slice(1),
+    ssl: parsed.searchParams.get('ssl') === 'true',
   };
 }
 
@@ -23,6 +24,7 @@ function createPrismaClient() {
     password: dbConfig.password,
     database: dbConfig.database,
     connectionLimit: 5,
+    ssl: dbConfig.ssl ? true : undefined,
   });
   return new PrismaClient({ adapter });
 }
