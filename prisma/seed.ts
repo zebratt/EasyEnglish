@@ -10,6 +10,7 @@ function parseDatabaseUrl(url: string) {
     user: parsed.username,
     password: parsed.password,
     database: parsed.pathname.slice(1),
+    ssl: parsed.searchParams.get('ssl') === 'true',
   };
 }
 
@@ -21,6 +22,7 @@ const adapter = new PrismaMariaDb({
   password: dbConfig.password,
   database: dbConfig.database,
   connectionLimit: 5,
+  ssl: dbConfig.ssl ? true : undefined,
 });
 const prisma = new PrismaClient({ adapter });
 
