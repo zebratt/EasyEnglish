@@ -11,6 +11,11 @@ interface KimiResponse {
 }
 
 export async function callKimi(messages: KimiMessage[], model = 'moonshot-v1-8k'): Promise<string> {
+  console.log('[Kimi Debug] API URL:', KIMI_API_URL);
+  console.log('[Kimi Debug] API Key exists:', !!KIMI_API_KEY);
+  console.log('[Kimi Debug] API Key length:', KIMI_API_KEY.length);
+  console.log('[Kimi Debug] API Key prefix:', KIMI_API_KEY.slice(0, 8) + '...');
+
   const res = await fetch(KIMI_API_URL, {
     method: 'POST',
     headers: {
@@ -21,6 +26,9 @@ export async function callKimi(messages: KimiMessage[], model = 'moonshot-v1-8k'
   });
 
   if (!res.ok) {
+    const body = await res.text();
+    console.error('[Kimi Debug] Response status:', res.status, res.statusText);
+    console.error('[Kimi Debug] Response body:', body);
     throw new Error(`Kimi API error: ${res.status} ${res.statusText}`);
   }
 
