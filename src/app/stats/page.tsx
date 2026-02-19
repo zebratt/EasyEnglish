@@ -66,58 +66,99 @@ export default function StatsPage() {
         <h1 className="mb-8 text-2xl font-bold">学习统计</h1>
 
         {loading && (
-          <div className="flex justify-center py-20">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+          <div className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-3">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="h-24 animate-pulse rounded-xl bg-secondary" />
+              ))}
+            </div>
+            <div className="h-64 animate-pulse rounded-xl bg-secondary" />
           </div>
         )}
 
         {error && (
           <div className="rounded-xl border border-border bg-card p-8 text-center">
+            <svg className="mx-auto mb-3 h-10 w-10 text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+            </svg>
             <p className="text-muted">{error}</p>
           </div>
         )}
 
         {data && (
-          <div className="space-y-8">
-            {/* 总览 */}
+          <div className="space-y-6">
+            {/* Overview cards */}
             <div className="grid gap-4 sm:grid-cols-3">
-              <div className="rounded-xl border border-border bg-card p-5 text-center">
-                <p className="text-3xl font-bold text-primary">{data.totalPracticed}</p>
-                <p className="mt-1 text-sm text-muted">总练习次数</p>
+              <div className="rounded-xl border border-border bg-card p-5">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-light">
+                    <svg className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold">{data.totalPracticed}</p>
+                    <p className="text-xs text-muted">总练习次数</p>
+                  </div>
+                </div>
               </div>
-              <div className="rounded-xl border border-border bg-card p-5 text-center">
-                <p className="text-3xl font-bold text-primary">
-                  {data.stats.filter((s) => s.totalPracticed > 0).length}
-                </p>
-                <p className="mt-1 text-sm text-muted">已练习语法类型</p>
+              <div className="rounded-xl border border-border bg-card p-5">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-success-light">
+                    <svg className="h-5 w-5 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold">
+                      {data.stats.filter((s) => s.totalPracticed > 0).length}
+                    </p>
+                    <p className="text-xs text-muted">已练习语法</p>
+                  </div>
+                </div>
               </div>
-              <div className="rounded-xl border border-border bg-card p-5 text-center">
-                <p className="text-3xl font-bold text-error">{data.weakPoints.length}</p>
-                <p className="mt-1 text-sm text-muted">薄弱项</p>
+              <div className="rounded-xl border border-border bg-card p-5">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-error-light">
+                    <svg className="h-5 w-5 text-error" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold">{data.weakPoints.length}</p>
+                    <p className="text-xs text-muted">薄弱项</p>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* 薄弱项 */}
+            {/* Weak points */}
             {data.weakPoints.length > 0 && (
-              <div className="rounded-xl border border-error/20 bg-error/5 p-6">
-                <h2 className="mb-3 text-sm font-semibold text-error">薄弱项（平均分 &lt; 70）</h2>
+              <div className="rounded-xl border border-error/20 bg-error-light p-5">
+                <div className="mb-3 flex items-center gap-2">
+                  <svg className="h-4 w-4 text-error" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                  </svg>
+                  <h2 className="text-sm font-semibold text-error">薄弱项（平均分 &lt; 70）</h2>
+                </div>
                 <div className="flex flex-wrap gap-2">
                   {data.weakPoints.map((wp) => (
                     <span
                       key={wp.grammarType.id}
-                      className="rounded-full border border-error/20 bg-card px-3 py-1 text-xs"
+                      className="rounded-full border border-error/20 bg-card px-3 py-1 text-xs font-medium"
                     >
-                      {wp.grammarType.name}（{wp.avgScore}分）
+                      {wp.grammarType.name}
+                      <span className="ml-1 text-error">{wp.avgScore}分</span>
                     </span>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* 详细统计 */}
+            {/* Detailed stats */}
             <div className="rounded-xl border border-border bg-card p-6">
-              <h2 className="mb-4 text-sm font-semibold">各语法类型统计</h2>
-              <div className="space-y-3">
+              <h2 className="mb-5 text-sm font-semibold">各语法类型统计</h2>
+              <div className="space-y-4">
                 {data.stats.map((s) => (
                   <div key={s.grammarType.id} className="flex items-center gap-4">
                     <div className="w-28 shrink-0">
@@ -125,23 +166,23 @@ export default function StatsPage() {
                       <p className="text-xs text-muted">{levelLabel[s.grammarType.level]}</p>
                     </div>
                     <div className="flex-1">
-                      <div className="h-2 rounded-full bg-secondary">
+                      <div className="h-2.5 overflow-hidden rounded-full bg-secondary">
                         <div
-                          className={`h-2 rounded-full transition-all ${barColor(s.avgScore)}`}
+                          className={`h-2.5 rounded-full transition-all duration-500 ${barColor(s.avgScore)}`}
                           style={{ width: barWidth(s.avgScore) }}
                         />
                       </div>
                     </div>
-                    <div className="w-20 text-right">
+                    <div className="w-16 text-right">
                       {s.totalPracticed > 0 ? (
-                        <span className={`text-sm font-medium ${scoreColor(s.avgScore)}`}>
+                        <span className={`text-sm font-semibold ${scoreColor(s.avgScore)}`}>
                           {s.avgScore}分
                         </span>
                       ) : (
                         <span className="text-xs text-muted">未练习</span>
                       )}
                     </div>
-                    <div className="w-16 text-right text-xs text-muted">
+                    <div className="w-14 text-right text-xs text-muted">
                       {s.totalPracticed}次
                     </div>
                   </div>

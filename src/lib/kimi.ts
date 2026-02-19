@@ -10,7 +10,7 @@ interface KimiResponse {
   choices: { message: { content: string } }[];
 }
 
-export async function callKimi(messages: KimiMessage[], model = 'kimi-k2.5'): Promise<string> {
+export async function callKimi(messages: KimiMessage[], model = 'moonshot-v1-8k'): Promise<string> {
   const res = await fetch(KIMI_API_URL, {
     method: 'POST',
     headers: {

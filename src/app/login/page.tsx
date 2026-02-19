@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -46,77 +45,109 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-sm">
+      {/* Background decoration */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -left-40 -top-40 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
+        <div className="absolute -bottom-40 -right-40 h-80 w-80 rounded-full bg-accent/5 blur-3xl" />
+      </div>
+
+      <div className="relative w-full max-w-md">
+        {/* Brand header */}
         <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold text-primary">Easy English</h1>
-          <p className="mt-2 text-sm text-muted">英语语法翻译练习</p>
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-2xl font-bold text-white shadow-lg shadow-primary/25">
+            E
+          </div>
+          <h1 className="text-2xl font-bold">Easy English</h1>
+          <p className="mt-1.5 text-sm text-muted">通过中译英练习，系统性提升语法能力</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {isRegister && (
+        {/* Form card */}
+        <div className="rounded-2xl border border-border bg-card p-8 shadow-sm">
+          <h2 className="mb-6 text-center text-lg font-semibold">
+            {isRegister ? '创建账号' : '欢迎回来'}
+          </h2>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {isRegister && (
+              <div>
+                <label htmlFor="nickname" className="mb-1.5 block text-sm font-medium">
+                  昵称
+                </label>
+                <input
+                  id="nickname"
+                  type="text"
+                  value={nickname}
+                  onChange={(e) => setNickname(e.target.value)}
+                  className="w-full rounded-xl border border-border bg-secondary/50 px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-muted/60 focus:border-primary focus:bg-background"
+                  placeholder="输入昵称（可选）"
+                />
+              </div>
+            )}
             <div>
-              <label className="mb-1 block text-sm text-muted">昵称</label>
+              <label htmlFor="email" className="mb-1.5 block text-sm font-medium">
+                邮箱
+              </label>
               <input
-                type="text"
-                value={nickname}
-                onChange={(e) => setNickname(e.target.value)}
-                className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-primary"
-                placeholder="输入昵称（可选）"
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full rounded-xl border border-border bg-secondary/50 px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-muted/60 focus:border-primary focus:bg-background"
+                placeholder="输入邮箱"
               />
             </div>
-          )}
-          <div>
-            <label className="mb-1 block text-sm text-muted">邮箱</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-primary"
-              placeholder="输入邮箱"
-            />
+            <div>
+              <label htmlFor="password" className="mb-1.5 block text-sm font-medium">
+                密码
+              </label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+                className="w-full rounded-xl border border-border bg-secondary/50 px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-muted/60 focus:border-primary focus:bg-background"
+                placeholder="输入密码（至少6位）"
+              />
+            </div>
+
+            {error && (
+              <div className="rounded-lg bg-error-light px-3 py-2 text-sm text-error">
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full cursor-pointer rounded-xl bg-primary py-2.5 text-sm font-medium text-white shadow-sm shadow-primary/25 transition-all hover:bg-primary-hover hover:shadow-md hover:shadow-primary/25 disabled:opacity-50"
+            >
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  处理中...
+                </span>
+              ) : isRegister ? '注册' : '登录'}
+            </button>
+          </form>
+
+          <div className="mt-6 text-center text-sm text-muted">
+            {isRegister ? '已有账号？' : '没有账号？'}
+            <button
+              onClick={() => {
+                setIsRegister(!isRegister);
+                setError('');
+              }}
+              className="ml-1 cursor-pointer font-medium text-primary hover:text-primary-hover"
+            >
+              {isRegister ? '去登录' : '去注册'}
+            </button>
           </div>
-          <div>
-            <label className="mb-1 block text-sm text-muted">密码</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-              className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-primary"
-              placeholder="输入密码（至少6位）"
-            />
-          </div>
-
-          {error && <p className="text-sm text-error">{error}</p>}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-lg bg-primary py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
-          >
-            {loading ? '处理中...' : isRegister ? '注册' : '登录'}
-          </button>
-        </form>
-
-        <p className="mt-6 text-center text-sm text-muted">
-          {isRegister ? '已有账号？' : '没有账号？'}
-          <button
-            onClick={() => {
-              setIsRegister(!isRegister);
-              setError('');
-            }}
-            className="ml-1 text-primary hover:underline"
-          >
-            {isRegister ? '去登录' : '去注册'}
-          </button>
-        </p>
-
-        <div className="mt-4 text-center">
-          <Link href="/" className="text-xs text-muted hover:text-primary">
-            先看看 →
-          </Link>
         </div>
       </div>
     </div>
