@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Level {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  nickname  String?
+  role      Role     @default(USER)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  practiceRecords PracticeRecord[]
+
+  @@map("users")
+}
+
+model GrammarType {
+  id        Int      @id @default(autoincrement())
+  name      String
+  nameEn    String   @map("name_en")
+  level     Level
+  createdAt DateTime @default(now()) @map("created_at")
+
+  sentences Sentence[]
+
+  @@map("grammar_types")
+}
+
+model Sentence {
+  id            Int         @id @default(autoincrement())
+  grammarTypeId Int         @map("grammar_type_id")
+  chinese       String      @db.Text
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+
+  grammarType     GrammarType      @relation(fields: [grammarTypeId], references: [id])
+  practiceRecords PracticeRecord[]
+
+  @@map("sentences")
+}
+
+model PracticeRecord {
+  id               Int      @id @default(autoincrement())
+  userId           Int      @map("user_id")
+  sentenceId       Int      @map("sentence_id")
+  userTranslation  String   @map("user_translation") @db.Text
+  totalScore       Int      @map("total_score")
+  grammarScore     Int      @map("grammar_score")
+  semanticScore    Int      @map("semantic_score")
+  fluencyScore     Int      @map("fluency_score")
+  feedback         String   @db.Text
+  referenceSimple  String   @map("reference_simple") @db.Text
+  referenceMedium  String   @map("reference_medium") @db.Text
+  referenceComplex String   @map("reference_complex") @db.Text
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  user     User     @relation(fields: [userId], references: [id])
+  sentence Sentence @relation(fields: [sentenceId], references: [id])
+
+  @@map("practice_records")
+}
